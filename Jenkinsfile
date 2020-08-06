@@ -1,4 +1,5 @@
 pipeline {
+    agent none
     environment {
         registryCredential = "dockerhub_id"
         newImage = ""
@@ -13,6 +14,7 @@ pipeline {
             }
         }
         stage('Build Image') {
+            agent any
             steps {
                 echo 'Start building a docker image'
 
@@ -23,6 +25,7 @@ pipeline {
             }
         }
         stage('Push to Docker hub'){
+            agent any
             steps {
                 echo 'Pushing image to docker hub'
                 script {
