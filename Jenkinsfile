@@ -10,7 +10,7 @@ pipeline {
                 docker { image 'gradle:6.5-jdk11' }
             }
             steps {
-                sh 'gradle build'
+                sh 'gradle clean build'
             }
             post {
                 always {
@@ -21,7 +21,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 echo 'Start building a docker image'
-
+                sh 'ls build/libs/*'
                 script {
                     newImage = docker.build("lichader/user-api-v1:${env.BUILD_ID}")
                 }
