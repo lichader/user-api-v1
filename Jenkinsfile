@@ -3,9 +3,14 @@ pipeline {
         docker { image 'gradle:6.5-jdk11' }
     }
     stages {
-        stage('Test') {
+        stage('Build') {
             steps {
-                sh 'gradle --version'
+                sh 'gradle build'
+            }
+        }
+        post {
+            always {
+                junit 'build/reports/**/*.xml'
             }
         }
     }
