@@ -1,9 +1,5 @@
 pipeline {
-    agent any
-    environment {
-        registryCredential = "dockerhub_id"
-        newImage = ""
-    }
+    agent none
     stages {
         stage('Build') {
             agent {
@@ -18,25 +14,20 @@ pipeline {
                 }
             }
         }
-        stage('Build Image') {
+        stage('Build and push image') {
+            agent any
             steps {
                 echo 'Start building a docker image'
                 sh 'ls build/libs/*'
                 script {
-                    newImage = docker.build("lichader/user-api-v1:${env.BUILD_ID}")
-                }
-            }
-        }
-        stage('Push to Docker hub'){
-            steps {
-                echo 'Pushing image to docker hub'
-                script {
-                    docker.withRegistry( '', registryCredential ) { 
+                    def newImage = docker.build("lichader/user-api-v1:${env.BUILD_ID}")
+                    docker.withRegistry( '', "dockerhub_id" ) { 
                         newImage.push() 
                     }
                 }
             }
         }
+
     }
 
 }
