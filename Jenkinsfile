@@ -8,10 +8,10 @@ pipeline {
                 sh 'gradle build'
             }
         }
-        post {
-            always {
-                junit 'build/reports/**/*.xml'
-            }
+    }
+    post {
+        always {
+            junit 'build/reports/**/*.xml'
         }
     }
 }
