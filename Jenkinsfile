@@ -3,11 +3,11 @@ pipeline {
         registryCredential = "dockerhub_id"
         newImage = ""
     }
-    agent {
-        docker { image 'gradle:6.5-jdk11' }
-    }
     stages {
         stage('Build') {
+            agent {
+                docker { image 'gradle:6.5-jdk11' }
+            }
             steps {
                 sh 'gradle build'
             }
