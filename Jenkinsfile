@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     environment {
         registryCredential = "dockerhub_id"
         newImage = ""
@@ -12,20 +12,22 @@ pipeline {
             steps {
                 sh 'gradle build'
             }
+            post {
+                always {
+                    junit 'build/test-results/**/*.xml'
+                }
+            }
         }
         stage('Build Image') {
-            agent any
             steps {
                 echo 'Start building a docker image'
 
                 script {
                     newImage = docker.build("lichader/user-api-v1:${env.BUILD_ID}")
-                    newImage.push()
                 }
             }
         }
         stage('Push to Docker hub'){
-            agent any
             steps {
                 echo 'Pushing image to docker hub'
                 script {
@@ -36,12 +38,5 @@ pipeline {
             }
         }
     }
-    post {
-        success {
-            echo "Build success"
-        }
-        always {
-            junit 'build/test-results/**/*.xml'
-        }
-    }
+
 }
